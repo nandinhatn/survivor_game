@@ -26,7 +26,7 @@ function PlayerModule.isLoaded(player:Player):boolean
 end
 
 function PlayerModule.SetHunger(player:Player, hunger: number)
-    print("chamou setHUnger")
+ 
    
   
         playersCached[player.UserId].hunger = hunger
@@ -36,8 +36,7 @@ end
 
 
 function PlayerModule.GetHunger(player:Player)
-    print("Dentro do Gethunger ")
-        print(player)
+    
     print(playersCached)
     if playersCached[player.UserId] then
         return playersCached[player.UserId].hunger 
@@ -65,7 +64,7 @@ end
 
 
 local function onPlayerRemoving(player:Player)
-    print("Player Removido")
+   
     PlayerUnLoaded:Fire(player)
     playersCached[player.UserId]= nil
    
