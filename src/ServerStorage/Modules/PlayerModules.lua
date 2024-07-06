@@ -37,7 +37,7 @@ end
 
 function PlayerModule.GetHunger(player:Player)
     
-    print(playersCached)
+    
     if playersCached[player.UserId] then
         return playersCached[player.UserId].hunger 
     end

@@ -18,7 +18,7 @@ local hungerBar:Frame = hungerUI:WaitForChild("Bar")
 
 
 PlayerHungerUpdated.OnClientEvent:Connect(function(hunger:number)
-    print(hunger)
+ 
     -- updated the bar's size according hunger
     hungerBar.Size= UDim2.fromScale(hunger/100, hungerBar.Size.Y.Scale)
 
