@@ -5,7 +5,7 @@ local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 
 -- CONSTANTS
 local CORE_LOOP_INTERVAL = 2
-local HUNGER_DECREMENT = 1
+local HUNGER_DECREMENT = 3
 
 -- MEMBERS
 local PlayerLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoaded

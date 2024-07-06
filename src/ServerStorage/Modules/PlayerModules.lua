@@ -1,7 +1,15 @@
 local PlayerModule ={}
 -- gravar todos os jogadores
 
-
+local function normalizeHunger(hunger:number):number
+    if hunger >100 then
+        hunger = 100
+    end
+    if hunger <0 then
+        hunger = 0
+    end
+    return hunger
+end
 
 local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
@@ -27,19 +35,22 @@ end
 
 function PlayerModule.SetHunger(player:Player, hunger: number)
  
-   
-  
-        playersCached[player.UserId].hunger = hunger
+    local hungerCurrent = normalizeHunger(hunger)
+        
+       
+        playersCached[player.UserId].hunger = hungerCurrent
    
     
 end
 
 
 function PlayerModule.GetHunger(player:Player)
-    
-    
+      
+   
     if playersCached[player.UserId] then
-        return playersCached[player.UserId].hunger 
+        
+        local hungerCurrent = normalizeHunger(playersCached[player.UserId].hunger)
+        return hungerCurrent
     end
    
 end
