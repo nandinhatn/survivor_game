@@ -4,7 +4,7 @@ local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHun
 -- CONSTANTS
 local BAR_FULL_COLOR = Color3.fromRGB(48, 255, 55)
 local BAR_LOW_COLOR = Color3.fromRGB(200, 150, 55)
-
+local BAR_LOWER_COLOR = Color3.fromRGB(255, 0, 0)
 -- MEMBERS
 
 local PlayerGui = Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -23,11 +23,12 @@ PlayerHungerUpdated.OnClientEvent:Connect(function(hunger:number)
     hungerBar.Size= UDim2.fromScale(hunger/100, hungerBar.Size.Y.Scale)
 
     -- updated the bar's color accordig to the hunger value
-    if hungerBar.Size.X.Scale >0.75 then
+    if hungerBar.Size.X.Scale >=0.45 then
         hungerBar.BackgroundColor3 = BAR_FULL_COLOR
-    else
+    elseif hungerBar.Size.X.Scale <0.45 and hungerBar.Size.X.Scale >0.30 then
         hungerBar.BackgroundColor3 = BAR_LOW_COLOR
-
+    else
+        hungerBar.BackgroundColor3 = BAR_LOWER_COLOR
     end
 end
 )
