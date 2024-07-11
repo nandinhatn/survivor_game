@@ -5,7 +5,7 @@ local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 
 -- CONSTANTS
 local CORE_LOOP_INTERVAL = 2
-local HUNGER_DECREMENT = 3
+local HUNGER_DECREMENT = 10
 
 -- MEMBERS
 local PlayerLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoaded
@@ -13,6 +13,7 @@ local PlayerUnLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoa
 local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHungerUpdated
 
 local function coreLoop(player:Player)
+   
     local isRunning = true
     -- listen to the player Unloaded
     PlayerUnLoaded.Event:Connect(function(PlayerUnLoaded:Player)
@@ -31,7 +32,11 @@ local function coreLoop(player:Player)
             PlayerModule.SetHunger(player, currentHunger -HUNGER_DECREMENT)
             -- Notify Client
             PlayerHungerUpdated:FireClient(player,PlayerModule.GetHunger(player) )
-
+            if currentHunger<=0 then
+                print("Morreu")
+                player.Character:FindFirstChildOfClass("Humanoid").Health=0
+                
+            end
 
        
     
