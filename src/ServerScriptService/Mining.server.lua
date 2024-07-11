@@ -6,6 +6,7 @@ local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHun
 -- CONSTANT
 
     local PROXIMITY_ACTION = "Mining"
+    local PICKAXE_SOUND ="rbxassetid://7650217335"
   
 
 
@@ -14,15 +15,28 @@ animation.AnimationId = "rbxassetid://18428811797"
 
 local issPressing = true
 
+
+local function playMiningSound()
+    local miningSound = Instance.new("Sound", game:GetService(game:GetService("Workspace")))
+    miningSound.SoundId=PICKAXE_SOUND
+    miningSound.Parent = workspace
+    miningSound:Play()
+end
+
 local function onPromptTriggered(prompObject,player)
   
     if  prompObject.Name ~= PROXIMITY_ACTION then
         return
     end
-    local stoneModel = prompObject.Parent
+    local miningModel:Model = prompObject.Parent
+    print(miningModel)
+    local miningValue = miningModel:FindFirstChildOfClass("IntValue")
     issPressing = false
-
-    print(stoneModel)
+    PlayerModule.AddToIventory(player, miningValue.Name, miningValue.Value)
+    PlayerModule.GetInventory(player)
+    print(miningModel)
+    print(miningValue.Name)
+    print(miningValue.Value)
     print("eeeeeeeee")
     
   
@@ -41,6 +55,7 @@ local animationTrack:Animation =humanoidAnimator:LoadAnimation(animation)
 
 while issPressing do
     animationTrack:Play(nil,nil,1.5)
+    playMiningSound()
     print('while')
     wait(1)
 end
