@@ -29,8 +29,29 @@ local PlayerUnLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoa
 
 function PlayerModule.isLoaded(player:Player):boolean
     local isLoaded = playersCached[player.UserId] and true or false
+  
 
     return isLoaded
+end
+
+function PlayerModule.GetInventory(player:Player)
+    print(playersCached[player.UserId].inventory)
+    return playersCached[player.UserId].inventory
+end
+
+function PlayerModule.SetIventory(player:Player, inventory:table)
+    playersCached[player.UserId].inventory= inventory
+
+end
+
+function PlayerModule.AddToIventory(player:Player, key:string, value:number  )
+    local inventory = playersCached[player.UserId].inventory
+    if inventory[key] then
+        inventory[key] += value
+        return
+    end
+    inventory[key] = value
+
 end
 
 function PlayerModule.SetHunger(player:Player, hunger: number)
