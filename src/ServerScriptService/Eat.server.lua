@@ -1,6 +1,6 @@
 local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 local ProximityPromptService = game:GetService("ProximityPromptService")
-
+local CreateFood:BindableEvent = game.ServerStorage.BindableEvents.CreateFood
 local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHungerUpdated
 
 -- CONSTANT
@@ -31,6 +31,7 @@ local function onPromptTriggered(prompObject,player)
     print(foodModel.name,foodValue)
     playEatingSound()
     foodModel:Destroy()
+    CreateFood:Fire()
     print(PlayerModule.GetHunger(player))
     local current_hunger = PlayerModule.GetHunger(player)
     PlayerModule.SetHunger(player,current_hunger + foodValue)

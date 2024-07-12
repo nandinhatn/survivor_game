@@ -121,6 +121,7 @@ local function onPlayerRemoving(player:Player)
     --playersCached[player.UserId]= nil
     print(playersCached[player.UserId])
     database:SetAsync(player.UserId, playersCached[player.UserId])
+   -- database:SetAsync(player.UserId, PLAYER_DEFAULT_DATA)
    
 end
 

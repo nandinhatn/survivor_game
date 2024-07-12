@@ -1,7 +1,9 @@
 local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 local ProximityPromptService = game:GetService("ProximityPromptService")
+local ModelMingingDestroy = game.ServerStorage.BindableEvents.ModelMiningDestroy
 
 local PlayerInventoryUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerInventoryUpdated
+
 
 -- CONSTANT
 
@@ -40,6 +42,9 @@ local function onPromptTriggered(prompObject,player)
    PlayerInventoryUpdated:FireClient(player,PlayerModule.GetInventory(player))
     PlayerModule.GetInventory(player)
     playMiningSound(INVENTORY_SOUND)
+    miningModel:Destroy()
+    ModelMingingDestroy:Fire()
+    
    
     
   
