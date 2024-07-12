@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 -- reducao da fome do jogador ao longo do tempo
 
 
@@ -5,7 +6,7 @@ local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 
 -- CONSTANTS
 local CORE_LOOP_INTERVAL = 2
-local HUNGER_DECREMENT = 10
+local HUNGER_DECREMENT = 3
 
 -- MEMBERS
 local PlayerLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoaded
@@ -34,7 +35,18 @@ local function coreLoop(player:Player)
             PlayerHungerUpdated:FireClient(player,PlayerModule.GetHunger(player) )
             if currentHunger<=0 then
                 print("Morreu")
-                player.Character:FindFirstChildOfClass("Humanoid").Health=0
+                PlayerModule.SetHunger(player,100)
+                --player.Character:FindFirstChildOfClass("Humanoid").Health=0
+                local humanoid = player.Character:WaitForChild("Humanoid")
+                humanoid.Died:Connect(function()
+                    print("humanoid morreu")
+                   
+                    PlayerModule.SetHunger(player,100)
+                end
+        
+                )
+               
+                return
                 
             end
 
@@ -47,6 +59,8 @@ local function coreLoop(player:Player)
     end
 end
 
+
+
 local function onPlayerLoaded(player:Player)
     spawn(function()
       coreLoop(player)
@@ -54,6 +68,9 @@ local function onPlayerLoaded(player:Player)
     end)
 end
 PlayerLoaded.Event:Connect(onPlayerLoaded)
+
+
+
     
 
     

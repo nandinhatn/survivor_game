@@ -2,12 +2,13 @@ local PlayerModule ={}
 -- gravar todos os jogadores
 
 local function normalizeHunger(hunger:number):number
-    if hunger >100 then
+    if not hunger or hunger >100 then
         hunger = 100
     end
     if hunger <0 then
         hunger = 0
     end
+    
     return hunger
 end
 
@@ -16,7 +17,11 @@ local DataStoreService = game:GetService("DataStoreService")
 
 local PLAYER_DEFAULT_DATA= {
     hunger=100,
-    inventory = {},
+    inventory = {
+        Stone = 0,
+        Wood = 0,
+        Copper=0
+    },
     level =1,
 
 }
@@ -25,13 +30,23 @@ local playersCached ={} -- Dicitionary with all players in the game
 local database = DataStoreService:GetDataStore("Survival")
 local PlayerLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoaded
 local PlayerUnLoaded:BindableEvent = game.ServerStorage.BindableEvents.PlayerLoadedUnloaded
-
-
+local PlayerInventoryUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerInventoryUpdated
+local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHungerUpdated
+local PlayerLevelUp:RemoteEvent = game.ReplicatedStorage.Network.PlayerLevelUp
 function PlayerModule.isLoaded(player:Player):boolean
     local isLoaded = playersCached[player.UserId] and true or false
   
 
     return isLoaded
+end
+
+
+function PlayerModule.SetLevel(player:Player, level:number)
+    playersCached[player.UserId].level = level
+end
+
+function PlayerModule.GetLevel(player)
+return playersCached[player.UserId].level
 end
 
 function PlayerModule.GetInventory(player:Player)
@@ -77,8 +92,10 @@ function PlayerModule.GetHunger(player:Player)
 end
 local function onPlayerAdded(player:Player)
     player.CharacterAdded:Connect(function(_)
+    
         local data = database:GetAsync(player.UserId)
-        if not data then 
+      -- data=PLAYER_DEFAULT_DATA
+        if not data  then 
             data= PLAYER_DEFAULT_DATA
 
         end
@@ -86,11 +103,14 @@ local function onPlayerAdded(player:Player)
 
         -- Players is fully loaded
         PlayerLoaded:Fire(player)
-       
+        PlayerHungerUpdated:FireClient(player, PlayerModule.GetHunger(player))
+        PlayerInventoryUpdated:FireClient(player, PlayerModule.GetInventory(player))
+        PlayerLevelUp:FireClient(player,PlayerModule.GetLevel(player))
+        
 
 
     end)
-    playersCached[player.UserId] = PLAYER_DEFAULT_DATA
+    
    
 end
 
@@ -98,7 +118,9 @@ end
 local function onPlayerRemoving(player:Player)
    
     PlayerUnLoaded:Fire(player)
-    playersCached[player.UserId]= nil
+    --playersCached[player.UserId]= nil
+    print(playersCached[player.UserId])
+    database:SetAsync(player.UserId, playersCached[player.UserId])
    
 end
 
@@ -108,4 +130,5 @@ end
 
 Players.PlayerAdded:Connect(onPlayerAdded)
 Players.PlayerRemoving:Connect(onPlayerRemoving)
+
 return PlayerModule

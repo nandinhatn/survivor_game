@@ -1,7 +1,7 @@
 local PlayerModule = require(game.ServerStorage.Modules.PlayerModules)
 local ProximityPromptService = game:GetService("ProximityPromptService")
 
-local PlayerHungerUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerHungerUpdated
+local PlayerInventoryUpdated:RemoteEvent = game.ReplicatedStorage.Network.PlayerInventoryUpdated
 
 -- CONSTANT
 
@@ -33,6 +33,7 @@ local function onPromptTriggered(prompObject,player)
     local miningValue = miningModel:FindFirstChildOfClass("IntValue")
     issPressing = false
     PlayerModule.AddToIventory(player, miningValue.Name, miningValue.Value)
+   PlayerInventoryUpdated:FireClient(player,PlayerModule.GetInventory(player))
     PlayerModule.GetInventory(player)
     print(miningModel)
     print(miningValue.Name)
