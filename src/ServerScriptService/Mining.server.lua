@@ -7,6 +7,7 @@ local PlayerInventoryUpdated:RemoteEvent = game.ReplicatedStorage.Network.Player
 
     local PROXIMITY_ACTION = "Mining"
     local PICKAXE_SOUND ="rbxassetid://7650217335"
+    local INVENTORY_SOUND ="rbxassetid://4612383790"
   
 
 
@@ -16,12 +17,15 @@ animation.AnimationId = "rbxassetid://18428811797"
 local issPressing = true
 
 
-local function playMiningSound()
+local function playMiningSound(soundId)
     local miningSound = Instance.new("Sound", game:GetService(game:GetService("Workspace")))
-    miningSound.SoundId=PICKAXE_SOUND
+    miningSound.SoundId= soundId
     miningSound.Parent = workspace
     miningSound:Play()
 end
+
+
+
 
 local function onPromptTriggered(prompObject,player)
   
@@ -29,16 +33,14 @@ local function onPromptTriggered(prompObject,player)
         return
     end
     local miningModel:Model = prompObject.Parent
-    print(miningModel)
+   
     local miningValue = miningModel:FindFirstChildOfClass("IntValue")
     issPressing = false
     PlayerModule.AddToIventory(player, miningValue.Name, miningValue.Value)
    PlayerInventoryUpdated:FireClient(player,PlayerModule.GetInventory(player))
     PlayerModule.GetInventory(player)
-    print(miningModel)
-    print(miningValue.Name)
-    print(miningValue.Value)
-    print("eeeeeeeee")
+    playMiningSound(INVENTORY_SOUND)
+   
     
   
    
@@ -56,18 +58,18 @@ local animationTrack:Animation =humanoidAnimator:LoadAnimation(animation)
 
 while issPressing do
     animationTrack:Play(nil,nil,1.5)
-    playMiningSound()
-    print('while')
+    playMiningSound(PICKAXE_SOUND)
+   
     wait(1)
 end
 
-    print("segurei o botão")
+    
 end
 
 
 ProximityPromptService.PromptTriggered:Connect(onPromptTriggered)
 ProximityPromptService.PromptButtonHoldBegan:Connect(onPromptHoldBegan)
 ProximityPromptService.PromptButtonHoldEnded:Connect(function()
-    print('desapertei')
+ 
     issPressing=false
 end)
