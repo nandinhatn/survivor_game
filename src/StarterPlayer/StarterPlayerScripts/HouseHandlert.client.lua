@@ -25,13 +25,7 @@ local function onPlayerLevelUp(level)
      home = homeStorage:FindFirstChild(level):Clone()
     
     home.Parent = workspace.Home
- print(level)
- print(level)
- print(level)
- print(level)
- print(level)
- print(level)
- print(level)
+ 
 end
 
 
