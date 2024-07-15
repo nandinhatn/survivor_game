@@ -41,7 +41,7 @@ local function onPromptTriggered(prompObject,player)
     PlayerModule.AddToIventory(player, miningValue.Name, miningValue.Value)
    PlayerInventoryUpdated:FireClient(player,PlayerModule.GetInventory(player))
     PlayerModule.GetInventory(player)
-    playMiningSound(INVENTORY_SOUND)
+   playMiningSound(INVENTORY_SOUND)
     miningModel:Destroy()
     ModelMingingDestroy:Fire()
     

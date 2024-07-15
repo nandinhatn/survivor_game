@@ -59,6 +59,9 @@ function PlayerModule.SetIventory(player:Player, inventory:table)
 
 end
 
+
+
+
 function PlayerModule.AddToIventory(player:Player, key:string, value:number  )
     local inventory = playersCached[player.UserId].inventory
     if inventory[key] then
@@ -75,6 +78,8 @@ function PlayerModule.SetHunger(player:Player, hunger: number)
         
        
         playersCached[player.UserId].hunger = hungerCurrent
+        
+        PlayerHungerUpdated:FireClient(player, hungerCurrent) -- Notificar o cliente sobre a atualização de fome
    
     
 end
@@ -91,7 +96,12 @@ function PlayerModule.GetHunger(player:Player)
    
 end
 local function onPlayerAdded(player:Player)
-    player.CharacterAdded:Connect(function(_)
+    player.CharacterAdded:Connect(function(character)
+        
+        print("jogador iniciado", character)
+
+        
+       
     
         local data = database:GetAsync(player.UserId)
       -- data=PLAYER_DEFAULT_DATA
@@ -100,14 +110,16 @@ local function onPlayerAdded(player:Player)
 
         end
         playersCached[player.UserId]= data
-
+        playersCached[player.UserId].hunger=100
+       
         -- Players is fully loaded
         PlayerLoaded:Fire(player)
+        print("pega o hunger no player add")
         PlayerHungerUpdated:FireClient(player, PlayerModule.GetHunger(player))
         PlayerInventoryUpdated:FireClient(player, PlayerModule.GetInventory(player))
         PlayerLevelUp:FireClient(player,PlayerModule.GetLevel(player))
         
-
+        
 
     end)
     
@@ -115,11 +127,12 @@ local function onPlayerAdded(player:Player)
 end
 
 
+
 local function onPlayerRemoving(player:Player)
    
     PlayerUnLoaded:Fire(player)
     --playersCached[player.UserId]= nil
-    print(playersCached[player.UserId])
+   
     database:SetAsync(player.UserId, playersCached[player.UserId])
    -- database:SetAsync(player.UserId, PLAYER_DEFAULT_DATA)
    

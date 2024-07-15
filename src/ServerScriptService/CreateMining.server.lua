@@ -1,7 +1,7 @@
 local ModelMingingDestroy:BindableEvent = game.ServerStorage.BindableEvents.ModelMiningDestroy
 local ReplicatedStorage:ReplicatedStorage = game:GetService("ReplicatedStorage")
 local baseplate = game.Workspace:FindFirstChild("Baseplate")
-print(baseplate)
+
 
 -- subir para o workspace o stone, bigstone wood e cooper 
 
@@ -41,13 +41,13 @@ local function createMining(quantity:number, folder:string, model:string, child:
      for count=1, quantity do
         if #nameFolder:GetChildren() <quantity then
             local modelBigStone:Model= ReplicatedStorage:WaitForChild(folder):WaitForChild(child)
-            print(modelBigStone)
+            
             local modelBigStoneClone = modelBigStone:Clone()
-            print(modelBigStoneClone)
+           
             local randomPosition = getRandomPosition()
 
             modelBigStoneClone:FindFirstChild(model).CFrame= CFrame.new(randomPosition)
-            print(randomPosition)
+           
            
             modelBigStoneClone.Parent= nameFolder
             
@@ -71,7 +71,7 @@ generateMining()
 
 
 ModelMingingDestroy.Event:Connect(function()
-    print("Destruido")
+   
            wait(2)                         --folder      --model          --child
     generateMining()
 end)
